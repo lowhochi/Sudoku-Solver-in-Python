@@ -119,9 +119,67 @@ def examplePulp():
         print("{} = {}".format(variable.name, variable.varValue))
     print(pulp.value(my_problem.objective))
 
-# # # # # # # # # # # # # # # # # # # # MAIN # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # ## # # # # # # # # # # # # # # # # #
+def examplePulp2(): # same question as example5
+    # Q = np.array([1, 3, 7])
+    # M = np.array([[3, 6, 9, -5],
+    #               [1, 3, 9, 15],
+    #               [1, 3, 7, 0]])
+    my_problem = pulp.LpProblem("my_LP_Problem", pulp.LpMinimize)
+    x1 = pulp.LpVariable('x1', lowBound=0, cat='Continuous')
+    x2 = pulp.LpVariable('x2', lowBound=0, cat='Continuous')
+    x3 = pulp.LpVariable('x3', lowBound=0, cat='Continuous')
+    my_problem += x1+3*x2+7*x3, "Z"
+    my_problem += 3*x1+6*x2+9*x3>=-5
+    my_problem += 1*x1+3*x2+9*x3>=15
+    print(my_problem)
+    print("")
+    my_problem.solve()
+    pulp.LpStatus[my_problem.status]
+    for variable in my_problem.variables():
+        print("{} = {}".format(variable.name, variable.varValue))
+    print(pulp.value(my_problem.objective))
+    
+# # # # # # # # # # # # # # # # # # # # # # # # # # # ## # # # # # # # # # # # # # # # # #
+# LP: example6, non-standard problem
+# max P = 120*x1+ 40*x2 + 60*x3
+# constraint
+# x1 + x2 + x3 <= 100
+# 10*x1 + 4*x2 + 7*x3 <= 500
+# x1 + x2 + x3 >= 60
+# x1, x2, x3 >= 0
+def example6():
+    P = np.array([120, 40, 60, 0, 0, 0, 0])
+    M = np.array([[1, 1, 1, 1, 0 ,0 ,0, 100],
+                 [10, 4, 7, 0, 1, 0, 0, 500],
+                 [1, 1, 1, 0, 0, -1, 0, 60],
+                 [-120, -40, -60, 0, 0, 0, 1, 0]])
+    is_basic = [True, True, True, False, False, False, False]
+    Mtwo = LPsolve02(M, P, is_basic)
+    for j in range(0,M.shape[0]):
+        print('[', end='')
+        for k in range(0,M.shape[1]):
+            print('%8.2f'%Mtwo[j,k] ,end='')
+        print(']')
 
-examplePulp()
+def example6_Pulp():
+    eg6Problem = pulp.LpProblem("example6", pulp.LpMaximize)
+    x1 = pulp.LpVariable('x1', lowBound=0, cat='Continuous')
+    x2 = pulp.LpVariable('x2', lowBound=0, cat='Continuous')
+    x3 = pulp.LpVariable('x3', lowBound=0, cat='Continuous')
+    eg6Problem += 120*x1+40*x2+60*x3, "Z"
+    eg6Problem += x1 + x2 + x3 <= 100
+    eg6Problem += 10*x1 + 4*x2 + 7*x3 <= 500
+    eg6Problem += x1 + x2 + x3 >= 60
+    print(eg6Problem)
+    print("")
+    eg6Problem.solve()
+    pulp.LpStatus[eg6Problem.status]
+    for variable in eg6Problem.variables():
+        print("{} = {}".format(variable.name, variable.varValue))
+    print(pulp.value(eg6Problem.objective))
+# # # # # # # # # # # # # # # # # # # # MAIN # # # # # # # # # # # # # # # # # # # #
+example6()
 
 
 

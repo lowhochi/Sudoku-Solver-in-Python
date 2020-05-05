@@ -132,7 +132,6 @@ def findPivot(M):
     last_row[:] = M[(no_of_row-1), 0:(no_of_col-1)]
     pivot_row = 0
     pivot_col = 0
-
     pos = np.arange(0, no_of_col-1, 1)
     # sort the last row
     for j in range(0, (no_of_col-2)): # last_row[no_of_col-1] can be skipped
@@ -144,20 +143,10 @@ def findPivot(M):
                 pos[jj] = j
                 pos[j] = jj
     pivot_col = pos[0]
-##    for j in range(0, (no_of_col-1)):
-##        temp = last_row[j]
-##        is_minimum = True
-##        for jj in range(0, (no_of_col-1)):
-##            if (temp>last_row[jj]):
-##                is_minimum = False
-##                break
-##        if is_minimum==True:
-##            pivot_col = j
-##            break
     ratio = np.zeros(no_of_row-1)
     for k in range(0, no_of_row-1):
         if M[k, pivot_col]==0:
-            ratio[k] = 1E4 # big number
+            ratio[k] = 1E6 # big number
             continue
         ratio[k] = float(M[k, (no_of_col-1)])/M[k, pivot_col]
 
@@ -170,17 +159,11 @@ def findPivot(M):
                 ratio[kk] = temp2
                 pos2[kk] = k
                 pos2[k] = kk
-    pivot_row= pos2[0]
-##    for k in range(0, no_of_row-2):
-##        temp = ratio[k]
-##        is_minimum = True
-##        for kk in range(0, no_of_row-1):
-##            if (temp>ratio[kk]):
-##                is_minimum = False
-##                break
-##        if is_minimum==True:
-##            pivot_row = k
-##            break      
+
+    for kkk in range(0, no_of_row-1):
+        if ratio[kkk]>0:
+            pivot_row= pos2[kkk]
+            break
     return pivot_row, pivot_col
 
 def check_lastRow(M):
@@ -247,6 +230,7 @@ def LPsolve01(M):
             if (j!=pivot_row):
                 M0 = sumRow(M0, j, pivot_row, -M0[j, pivot_col])
 
+        is_done = check_lastRow(M0)
     return M0
 
 def makeDomain(M, P, is_basic): #only when no of basic variables <= 2
@@ -284,7 +268,7 @@ def makeDomain(M, P, is_basic): #only when no of basic variables <= 2
     #return pos
 
 def roundMatrix(M, r):
-    Mrd = np.zeros(M.shape)
+    Mrd = np.zeros(M.shape, dtype=float)
     for j in range(0, M.shape[0]):
         for k in range(0, M.shape[1]):
             Mrd[j, k] = round(M[j, k],r)
@@ -377,9 +361,101 @@ def printDualSoln(Mtwo, P, is_basic):
         print(value)
     print ("min value = ", Mtwo[-1][-1])
 
+def checkPivotColumnnTwo(colArray):
+    # ref: checkPivotColumn(colArray)
+    length = len(colArray)
+    colSum = sum(colArray)
+    number_of_zeros = 0
+    pos = 0
+    for j in range(0, length):
+        if colArray[j]==0:
+            number_of_zeros+=1
+        if (colArray[j]==1)or(colArray[j]==-1):
+            pos = j
+    if (abs(colSum)==1)and (number_of_zeros==(length-1)):
+        return True, pos
+    else:
+        return False, pos
 
 
+def currentSoln(M, is_basic):
+    num_of_variable = sum(is_basic)
+    no_of_row = M.shape[0]
+    no_of_col = M.shape[1]
+    solnSet = np.zeros(no_of_col-1)
+    for k in range(0, no_of_col-1):
+        colArray = np.zeros(no_of_row-1)
+        for j in range(0, no_of_row-1):
+            colArray[j] = M[j,k]
+        is_pivot, pos = checkPivotColumnnTwo(colArray)
+        if is_pivot==True:
+            solnSet[k]=M[pos, no_of_col-1]/M[pos,k]
+    signSet = np.zeros(no_of_col-1)
+    for k in range(0, no_of_col-1):
+        if solnSet[k]>0:
+            signSet[k] = 1
+        if solnSet[k]<0:
+            signSet[k]=-1
+        if solnSet[k]==0:
+            signSet[k]=0
+    return solnSet, signSet
 
+
+# LPsolve02 for mixed type problem
+def LPsolve02(M, P, is_basic):
+    M0 = np.zeros(M.shape)
+    M0[:][:] = M[:][:]
+    no_of_row = M.shape[0]
+    no_of_col = M.shape[1]
+    solnSet, signSet = currentSoln(M0, is_basic)
+    is_done = check_lastRow(M0)and(-1 not in signSet)
+    # start
+    while (-1 in signSet):
+        for k in range(0,no_of_col-1):
+            if (signSet[k]==-1):
+                is_pivot, pos = checkPivotColumnnTwo(M0[0:no_of_row-1,k])
+                for kk in range(0,no_of_col-2):
+                    if M0[pos,kk]>0:
+                        column01 = kk
+                ratio = np.zeros(no_of_row-1)
+                posArray = np.arange(0, no_of_row-1,1)
+                for j in range(0,no_of_row-1):
+                    if M[j,column01]==0:
+                        ratio[j]=1E6
+                    else:
+                        ratio[j]=float(M[j, no_of_col-1])/M[j,column01]
+                        
+                for m in range(0, no_of_row-2):
+                    for n in range(m+1, no_of_row-1):
+                        temp = ratio[m]
+                        if (ratio[m]>ratio[n]):
+                            ratio[m] = ratio[n]
+                            ratio[n] = temp
+                            posArray[n] = m
+                            posArray[m] = n
+                for m in range(0, no_of_row-1):
+                    if ratio[m]>0: #smallest positive entry
+                        row01 = posArray[m]
+                        break
+                M0 = prodRow(M0, row01, 1.0/M0[row01,column01])
+                for j in range(0, no_of_row):
+                    if (j!=row01):
+                        M0 = sumRow(M0, j, row01, -M0[j, column01])
+                solnSet, signSet = currentSoln(M0, is_basic)
+                break
+    is_done = check_lastRow(M0)      
+    count = 0
+    while (is_done==False) and (count<=200):
+        count = count+1
+        pivot_row, pivot_col = findPivot(M0)
+        if M0[pivot_row, pivot_col]==0:
+            break
+        M0 = prodRow(M0, pivot_row, 1.0/M0[pivot_row, pivot_col])
+        for j in range(0, no_of_row):
+            if (j!=pivot_row):
+                M0 = sumRow(M0, j, pivot_row, -M0[j, pivot_col])
+        is_done = check_lastRow(M0)
+    return M0
 
 
 
