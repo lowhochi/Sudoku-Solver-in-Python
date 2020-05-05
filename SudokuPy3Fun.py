@@ -531,7 +531,25 @@ def mySolveEngine(M, fillMatrix, valid, total):
                         # elapsed_time = time.time()-start_time
                         # print "Elasped time =", str(elapsed_time), "in seconds"
                             return M04, fillMatrix04, True
-
+                        
+def sortArray(fMatrix):
+    pos = np.arange(0,81,1,dtype=int)
+    choiceNum = np.zeros(81)
+    for rowNum in range(0,81):
+        count=0
+        for k in range(0,9):
+            if (fMatrix[rowNum][k]!=0):
+                count+=1
+        choiceNum[rowNum] = count
+    for i in range(0,80):
+        for j in range(i+1,81):
+            temp = choiceNum[i]
+            if (temp>choiceNum[j]):
+                choiceNum[i] = choiceNum[j]
+                choiceNum[j] = temp
+                pos[i] = j
+                pos[j] = i
+    return choiceNum, pos
 
 # On Progress: the non-dual blank engine
 def makeCaseNDB(M, fMatrix):
