@@ -1,4 +1,4 @@
-# SudokuPy3
+# Sudoku-Solver-in-Python
 Fun Game: a self-made sudoku solver in python language 
 
 |Content    |Files                                                    |
