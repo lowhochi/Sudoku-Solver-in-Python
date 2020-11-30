@@ -1,0 +1,105 @@
+% codefile2020.tex
+\setlength{\parindent}{0pt}
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% symbols
+\newcommand{\mR}{\mathbb{R}}
+\newcommand{\mC}{\mathbb{C}}
+\newcommand{\mS}{\mathbb{S}}
+\newcommand{\mZ}{\mathbb{Z}}
+\newcommand{\mH}{\mathbb{H}}
+\newcommand{\lie}{\mathcal{L}}
+% vectors
+\newcommand{\bi}{{\bf i}}
+\newcommand{\bj}{{\bf j}}
+\newcommand{\bk}{{\bf k}}
+\newcommand{\bn}{{\bf n}}
+\newcommand{\br}{{\bf r}}
+\newcommand{\bu}{{\bf u}}
+\newcommand{\bv}{{\bf v}}
+\newcommand{\bw}{{\bf w}}
+\newcommand{\bx}{{\bf x}}
+\newcommand{\by}{{\bf y}}
+\newcommand{\bz}{{\bf z}}
+\newcommand{\vi}{\vec{i}}
+\newcommand{\vj}{\vec{j}}
+\newcommand{\vk}{\vec{k}}
+% complex conjugate
+\newcommand{\oa}{\overline{a}}
+\newcommand{\ob}{\overline{b}}
+\newcommand{\oc}{\overline{c}}
+\newcommand{\of}{\overline{f}}
+\newcommand{\og}{\overline{g}}
+\newcommand{\oh}{\overline{h}}
+\newcommand{\oi}{\overline{i}}
+\newcommand{\oj}{\overline{j}}
+\newcommand{\ok}{\overline{k}}
+\newcommand{\ol}{\overline{l}}
+\newcommand{\om}{\overline{m}}
+\newcommand{\on}{\overline{n}}
+\newcommand{\op}{\overline{p}}
+\newcommand{\oq}{\overline{q}}
+\newcommand{\os}{\overline{s}}
+\newcommand{\ot}{\overline{t}}
+\newcommand{\ou}{\overline{u}}
+\newcommand{\ov}{\overline{v}}
+\newcommand{\ow}{\overline{w}}
+\newcommand{\ox}{\overline{x}}
+\newcommand{\oy}{\overline{y}}
+\newcommand{\oz}{\overline{z}}
+% overline greeks
+\newcommand{\oalpha}{\overline{\alpha}}
+\newcommand{\obeta}{\overline{\beta}}
+\newcommand{\ogamma}{\overline{\gamma}}
+\newcommand{\olambda}{\overline{\lambda}}
+\newcommand{\omu}{\overline{\mu}}
+\newcommand{\oomega}{\overline{\omega}}
+\newcommand{\opsi}{\overline{\psi}}
+\newcommand{\otheta}{\overline{\theta}}
+\newcommand{\ozeta}{\overline{\zeta}}
+% math symbol
+\newcommand{\bl}{\backslash}
+\newcommand{\prt}{\partial}
+\newcommand{\oprt}{\overline{\partial}}
+\newcommand{\curl}{\mbox{curl}}
+\newcommand{\mdiv}{\mbox{div}}
+\newcommand{\hess}{\mbox{Hess}}
+\newcommand{\nab}{\nabla}
+\newcommand{\cp}{\mathbb{C}P}
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% \newcommand and \def
+\newcommand{\dvec}[1]{\frac{d}{d#1}}
+\newcommand{\ddvec}[2]{\frac{d#1}{d#2}}
+\newcommand{\tvec}[1]{\frac{\prt}{\prt #1}}
+\newcommand{\ttvec}[2]{\frac{\prt #1}{\prt #2}}
+\newcommand{\ttves}[2]{\frac{\prt^2 #1}{\prt #2}}
+\newcommand{\pvec}[1]{\prt_{#1}}
+\newcommand{\define}{\overset{{\scriptscriptstyle \Delta}}{=}}
+\newcommand{\mysum}[3][n]{\sum_{#1=#2}^{#3}}
+\def\ba#1{\begin{array}{#1}}
+\def\ea{\end{array}}
+\def\bt#1{\begin{tabular}{#1}}
+\def\et{\end{tabular}}
+% spacing
+\newcommand{\spa}{\mbox{ }}
+\newcommand{\man}{\quad \mbox{and} \quad}
+\newcommand{\mor}{\quad \mbox{or} \quad}
+\newcommand{\ds}{\displaystyle}
+\newcommand{\spts}{\scriptstyle}
+\newcommand{\mcl}{\mbox{ $|$ }}
+\newcommand{\bvline}{\biggr\rvert}
+\newcommand{\hl}{\hspace{-0.1in}}
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% \newthereom
+\newtheorem*{prop}{Proposition} 
+\newtheorem*{thm}{Theorem}  
+\newtheorem*{den}{Definition}
+\newtheorem*{lem}{Lemma} 
+\newtheorem*{coll}{Corollary}
+% equation environment
+\newcounter{eqtncount}
+\newenvironment{eqtn}
+{\stepcounter{eqtncount}
+	\addtocounter{equation}{-1}
+	\renewcommand\theequation{\arabic{eqtncount}}\equation}
+{\endequation}
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
